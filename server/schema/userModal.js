@@ -45,6 +45,27 @@ userModal.statics.signup = async function (email,password){
     return user;
 }
 
+userModal.statics.login = async function(email, password) {
+    
+    if (!email || !password) {
+        throw Error('All fields must be filled');
+    }
+
+    const user = await this.findOne({email});
+
+    if(!user) {
+        throw Error('User Not found');
+    }
+
+    const match = await bcrypt.compare(password, user.password);
+
+    if (!match) {
+        throw Error('Creadentials are wrong');
+    }
+
+    return user;
+}
+
 
 const user = mongoose.model('user',userModal);
 
